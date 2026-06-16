@@ -2,41 +2,24 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
 
   const handleLogin = async () => {
-    if (!email.trim()) {
-      alert("Enter email ❌");
-      return;
-    }
-
-    setLoading(true);
-
     const { error } = await supabase.auth.signInWithOtp({
       email,
     });
 
-    setLoading(false);
-
     if (error) {
-      alert("Login failed ❌");
-      return;
+      alert("Error sending login link ❌");
+    } else {
+      alert("Check your email for login link 📩");
     }
-
-    alert("Check your email 📩");
-
-    // redirect hint page (user goes to dashboard after login link click)
-    router.push("/dashboard");
   };
 
   return (
-    <div style={{ padding: "30px", fontFamily: "Arial" }}>
+    <div style={{ padding: "30px" }}>
       <h1>Login 🔐</h1>
 
       <input
@@ -54,17 +37,15 @@ export default function LoginPage() {
 
       <button
         onClick={handleLogin}
-        disabled={loading}
         style={{
           marginTop: "10px",
           padding: "10px 15px",
-          background: loading ? "gray" : "#4f46e5",
+          background: "#4f46e5",
           color: "white",
           border: "none",
-          cursor: "pointer",
         }}
       >
-        {loading ? "Sending..." : "Login"}
+        Login
       </button>
     </div>
   );
